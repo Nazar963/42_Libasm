@@ -1,20 +1,24 @@
 section .data
-	text1 db "Hello, World!",10,0
-	text2 db "What's your name?",10,0
-	text3 db 0
-	text4 db "",0
+	text1 db "Hello, World", 10, 0
+	text2 db "a", 10, 0
+	text3 db "blah blah blah blah", 10, 0
 	error db "Hi, There's an error here!",10,0
 	; format db "%ld",10,0 ;? Format for the printf call
 
 section .text
-	; global main
-	global ft_strlen
-	extern __errno_location ;? To get the errno pointer and set it
-	; extern printf ;? To be able to use printf
+	global main
+	global ft_write
+	extern ft_strlen
+	extern __errno_location
+	; extern printf
 
 main:
 	mov rdi, text1
 	call ft_strlen
+	mov rdi, 1
+	mov rsi, text1
+	mov rdx, rax
+	call ft_write
 	;* printf rax
 	; mov rsi, rax
 	; mov rdi, format
@@ -23,6 +27,10 @@ main:
 
 	mov rdi, text2
 	call ft_strlen
+	mov rdi, 1
+	mov rsi, text2
+	mov rdx, rax
+	call ft_write
 	;* printf rax
 	; mov rsi, rax
 	; mov rdi, format
@@ -31,14 +39,10 @@ main:
 
 	mov rdi, text3
 	call ft_strlen
-	;* printf rax
-	; mov rsi, rax
-	; mov rdi, format
-	; xor rax, rax
-	; call printf wrt ..plt
-
-	mov rdi, text4
-	call ft_strlen
+	mov rdi, 1
+	mov rsi, text3
+	mov rdx, rax
+	call ft_write
 	;* printf rax
 	; mov rsi, rax
 	; mov rdi, format
@@ -49,22 +53,23 @@ main:
 	xor rdi, rdi
 	syscall
 
-ft_strlen:
-	cmp rdi, 0
+ft_write:
+	cmp rsi, 0
 	je _error_handle
-	cmp byte [rdi], 0
+	cmp byte [rsi], 0
 	je _error_handle
+
 	xor rcx, rcx
-
-_ft_strlen_loop:
-	cmp byte [rdi + rcx], 0
-	je _done
-	inc rcx
-	jmp _ft_strlen_loop
-
-_done:
-	mov rax, rcx
+	xor rbx, rbx
+	call _ft_write_loop
 	ret
+
+_ft_write_loop:
+	mov rax, 1
+	syscall
+
+	cmp rax, 0
+	jl _syscallError
 
 _error_handle:
 	mov rax, 1
