@@ -3,14 +3,12 @@ section .data
 	text2 db "a", 10, 0
 	text3 db "blah blah blah blah", 10, 0
 	error db "Hi, There's an error here!",10,0
-	; format db "%ld",10,0 ;? Format for the printf call
 
 section .text
 	global main
 	global ft_write
 	extern ft_strlen
 	extern __errno_location
-	; extern printf
 
 main:
 	mov rdi, text1
@@ -19,11 +17,6 @@ main:
 	mov rsi, text1
 	mov rdx, rax
 	call ft_write
-	;* printf rax
-	; mov rsi, rax
-	; mov rdi, format
-	; xor rax, rax
-	; call printf wrt ..plt
 
 	mov rdi, text2
 	call ft_strlen
@@ -31,11 +24,6 @@ main:
 	mov rsi, text2
 	mov rdx, rax
 	call ft_write
-	;* printf rax
-	; mov rsi, rax
-	; mov rdi, format
-	; xor rax, rax
-	; call printf wrt ..plt
 
 	mov rdi, text3
 	call ft_strlen
@@ -43,11 +31,6 @@ main:
 	mov rsi, text3
 	mov rdx, rax
 	call ft_write
-	;* printf rax
-	; mov rsi, rax
-	; mov rdi, format
-	; xor rax, rax
-	; call printf wrt ..plt
 
 	mov rax, 60
 	xor rdi, rdi
@@ -59,8 +42,6 @@ ft_write:
 	cmp byte [rsi], 0
 	je _error_handle
 
-	xor rcx, rcx
-	xor rbx, rbx
 	call _ft_write_loop
 	ret
 
@@ -70,6 +51,7 @@ _ft_write_loop:
 
 	cmp rax, 0
 	jl _syscallError
+	ret
 
 _error_handle:
 	mov rax, 1
