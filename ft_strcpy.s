@@ -11,7 +11,8 @@ section .bss
 	buff resb 50
 
 section .text
-	global main
+	; global main
+	global ft_strcpy
 	extern __errno_location
 	; extern printf
 
