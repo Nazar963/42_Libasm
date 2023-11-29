@@ -1,8 +1,10 @@
 section .data
-	str1 db "101",0
-	; base1 db 2
-	str2 db "0x5",0
-	; base2 db 16
+	str1 db "101",0 ;base 2 => 5
+	str2 db "0x5",0 ;base 16 => 5
+	str3 db "100",0 ;base 10
+	str4 db "21",0 ;base 7 => 15
+	str5 db "-21",0 ;base 10
+	str6 db "-1B0",0 ;base 16 => -432
 	error db "Hi, There's an error here!",10,0
 	format db "%d",10,0 ;? Format for the printf call
 
@@ -15,17 +17,53 @@ section .text
 	extern malloc
 
 main:
-	; mov rdi, str1
-	; mov rsi, 2
-	; ; movzx rsi, byte [base1]
-	; call ft_atoi_base
-	; ;* printf rax
-	; mov rsi, rax
-	; mov rdi, format
-	; xor rax, rax
-	; call printf wrt ..plt
+	mov rdi, str1
+	mov rsi, 2
+	; movzx rsi, byte [base1]
+	call ft_atoi_base
+	;* printf rax
+	mov rsi, rax
+	mov rdi, format
+	xor rax, rax
+	call printf wrt ..plt
 
 	mov rdi, str2
+	mov rsi, 16
+	call ft_atoi_base
+	;* printf rax
+	mov rsi, rax
+	mov rdi, format
+	xor rax, rax
+	call printf wrt ..plt
+
+	mov rdi, str3
+	mov rsi, 10
+	call ft_atoi_base
+	;* printf rax
+	mov rsi, rax
+	mov rdi, format
+	xor rax, rax
+	call printf wrt ..plt
+
+	mov rdi, str4
+	mov rsi, 7
+	call ft_atoi_base
+	;* printf rax
+	mov rsi, rax
+	mov rdi, format
+	xor rax, rax
+	call printf wrt ..plt
+
+	mov rdi, str5
+	mov rsi, 10
+	call ft_atoi_base
+	;* printf rax
+	mov rsi, rax
+	mov rdi, format
+	xor rax, rax
+	call printf wrt ..plt
+
+	mov rdi, str6
 	mov rsi, 16
 	call ft_atoi_base
 	;* printf rax
@@ -43,6 +81,10 @@ ft_atoi_base:
 	xor rbx, rbx ;* Will hold the the char to be converted
 	xor rdx, rdx ;* Will be the max possibile character
 	mov r8, 1 ;* It will be the sign
+	movzx r10, byte [rdi]
+	cmp rsi, 16
+	je handle_0x
+	what:
 
 ft_atoi_base_loop:
 	movzx rbx, byte [rdi]
@@ -76,41 +118,36 @@ ft_atoi_base_loop:
 	sub rsi, 97
 	add rsi, 10
 
+	;* c <= max_digit
 	cmp rbx, rdx
-	jg not_valid_character_4
+	jg not_valid_char_4
+
+	;* c >= '0' && c <= '9'
 	cmp bl, 48
-	jl not_valid_character_2
-	cmp bl, 57
-	jg not_valid_character_2
-	sub bl, 48 ;? Should be in a label
-	back_if:
+	jge further_check
+	back_from_further_check:
+
+	;* c >= 'a' && c <= 'f'
 	cmp bl, 97
-	jl not_valid_character_3
-	cmp bl, 102
-	jg not_valid_character_3
-	
-	cmp bl 
-	back_if_else:
-	back:
-	back_maybe:
+	jge further_check_char
+
+	done: ;* To get back from the further_check
 
 	mov rax, rcx      ; Move rcx to rax
 	mul rsi           ; Multiply rax by rsi, result in rdx:rax
 	mov rcx, rax      ; Move the result back to rcx (lower part of the product)
-	; mul rcx, rsi
+
 	movzx rax, bl      ; Move rcx to rax
 	mul r8           ; Multiply rax by rsi, result in rdx:rax
 	mov bl, al
-	; mov bl, rax      ; Move the result back to rcx (lower part of the product)
-	; mul bl, r8
-	movzx r9, bl      ; Zero-extend bl to 64-bit and move to r8
+	movsx r9, bl      ; Zero-extend bl to 64-bit and move to r8
 	add rcx, r9       ; Add r8 to rcx
 	; add rcx, bl
 
 	inc rdi
 	jmp ft_atoi_base_loop
-	movzx rbx, bl
-	sub rbx, 48
+	; movzx rbx, bl
+	; sub rbx, 48
 
 convert_too_int:
 	add rsi, 48
@@ -118,9 +155,10 @@ convert_too_int:
 	sub rsi, 48
 	jmp back_convert
 
-change_sign:
+change_sign: ;* You can add anotehr condition to have if a sign is inside the string
 	neg r8
 	inc rdi
+	movzx rbx, byte [rdi]
 	jmp back_sign
 
 not_valid_character:
@@ -131,14 +169,14 @@ uppercase_character:
 	add bl, 32
 	jmp back_upper
 
-end_loop:
+end_loop: ;* You will need to mul with the sign
 	mov rax, rcx
 	ret
 
-maybe_char:
-	add bl, 58
+maybe_char: ;* 10 + c - 'a'
+	add bl, 10
 	sub bl, 97
-	jmp back_maybe
+	jmp done
 
 check_if_number:
 	cmp bl, 48
@@ -146,6 +184,49 @@ check_if_number:
 	cmp bl, 57
 	jg not_valid_character
 	jmp back
+
+not_valid_char_4:
+	mov rax, -1
+	ret
+
+further_check:
+	cmp bl, 57
+	jg back_from_further_check
+	sub bl, 48 
+	jmp done
+
+further_check_char:
+	cmp bl, 102
+	jg not_valid_char_4
+	jmp maybe_char
+
+handle_0x:
+	cmp r10, 48
+	je inco_1
+	back_1:
+	cmp r10, 120
+	je inco_2
+	back_2:
+	cmp r10, 88
+	je inco_3
+	back_3:
+	jmp what
+
+inco_1:
+	inc rdi
+	movzx r10, byte [rdi]
+	jmp back_1
+
+inco_2:
+	inc rdi
+	movzx r10, byte [rdi]
+	jmp back_2
+
+inco_3:
+	inc rdi
+	movzx r10, byte [rdi]
+	jmp back_3
+
 
 ; TODO:
 ; 1) Get the sign and the case where the number is negative
@@ -156,3 +237,13 @@ check_if_number:
 ;			a) If its a number then just subtract 48 in order to render it a number.
 ;			b) If its a character then add 10 and then subtract 97 from it to get the character numbericale value ex.(a=10, b=11 ...).
 ;		III) Something goes wrong return -1.
+; TODO for the error managment:
+; 1) If base is empty or 1
+; 2) If str is empty
+; 3) Check for base - or +
+; 4) Do the same check for the num
+; TODO:
+; 1) first check if either is empty
+; 2) while looping through the base base sure there are no signs
+; 3) for the num loop the white spaces signs and obtain the right sign
+; 4) concatinate the string at the last valid char
