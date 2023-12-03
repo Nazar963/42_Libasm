@@ -50,9 +50,6 @@ ft_strdup:
 	call ft_strcpy
 	ret
 
-_syscallError:
-	mov rbx, rax
-	call __errno_location wrt ..plt
-	neg rbx
-	mov [rax], rbx
+_malloc_error:
+	mov rax, -1
 	ret
