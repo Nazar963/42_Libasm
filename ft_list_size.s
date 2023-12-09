@@ -18,48 +18,44 @@ main:
 	call malloc wrt ..plt
 	cmp rax, 0
 	jl _malloc_error
+	mov rdi, rax
 
-	push rax
-	lea rdi, [rsp]
-
-	mov rax, [rsp]
-	mov qword [rax], 5
-	mov qword [rax + 8], 0
+	mov qword [rdi], 5
+	mov qword [rdi + 8], 0
 	mov rsi, 10
-	call ft_list_push_front
-	add rsp, 8
+	call ft_list_size
 	mov rbx, rax
 	mov rcx, [rax + 8]
 	;* printf rax
-	; push rbx
-	; mov rsi, rbx
-	; mov rdi, format2
-	; xor rax, rax
-	; call printf wrt ..plt
+	push rbx
+	mov rsi, rbx
+	mov rdi, format2
+	xor rax, rax
+	call printf wrt ..plt
 
-	; pop rbx
-	; mov rsi, [rbx]
-	; mov rdi, format
-	; xor rax, rax
-	; call printf wrt ..plt
+	pop rbx
+	mov rsi, [rbx]
+	mov rdi, format
+	xor rax, rax
+	call printf wrt ..plt
 
-	; mov rsi, [rbx + 8]
-	; mov rdi, format2
-	; xor rax, rax
-	; call printf wrt ..plt
+	mov rsi, [rbx + 8]
+	mov rdi, format2
+	xor rax, rax
+	call printf wrt ..plt
 
-	; push rcx
-	; mov rsi, rcx
-	; mov rdi, format2
-	; xor rax, rax
-	; call printf wrt ..plt
+	push rcx
+	mov rsi, rcx
+	mov rdi, format2
+	xor rax, rax
+	call printf wrt ..plt
 
-	; pop rcx
+	pop rcx
 
-	; mov rsi, [rcx]
-	; mov rdi, format
-	; xor rax, rax
-	; call printf wrt ..plt
+	mov rsi, [rcx]
+	mov rdi, format
+	xor rax, rax
+	call printf wrt ..plt
 
 	mov rsi, [rcx + 8]
 	mov rdi, format2
@@ -70,8 +66,7 @@ main:
 	xor rdi, rdi
 	syscall
 
-ft_list_push_front:
-	mov rdi, [rdi]
+ft_list_size:
 	mov rbx, rdi
 	mov r12, rsi
 
