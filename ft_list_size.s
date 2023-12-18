@@ -16,59 +16,13 @@ section .text
 main:
 	mov rdi, 16
 	call malloc wrt ..plt
-	cmp rax, 0
+	cmp rax, 0 ;! ==> it should be test rax, rax and the jz
 	jl _malloc_error
-	mov rdi, rax
 
-	mov qword [rdi], 5
-	mov qword [rdi + 8], 0
-	mov rsi, 10
-	call ft_list_size
 	mov rbx, rax
-	mov rcx, [rax + 8]
-	;* printf rax
-	push rbx
-	mov rsi, rbx
-	mov rdi, format2
-	xor rax, rax
-	call printf wrt ..plt
+	mov qword [rbx], 5
+	mov qword [rbx + 8], 0
 
-	pop rbx
-	mov rsi, [rbx]
-	mov rdi, format
-	xor rax, rax
-	call printf wrt ..plt
-
-	mov rsi, [rbx + 8]
-	mov rdi, format2
-	xor rax, rax
-	call printf wrt ..plt
-
-	push rcx
-	mov rsi, rcx
-	mov rdi, format2
-	xor rax, rax
-	call printf wrt ..plt
-
-	pop rcx
-
-	mov rsi, [rcx]
-	mov rdi, format
-	xor rax, rax
-	call printf wrt ..plt
-
-	mov rsi, [rcx + 8]
-	mov rdi, format2
-	xor rax, rax
-	call printf wrt ..plt
-
-	mov rax, 60
-	xor rdi, rdi
-	syscall
-
-ft_list_size:
-	mov rbx, rdi
-	mov r12, rsi
 
 	mov rdi, 16
 	call malloc wrt ..plt
@@ -76,11 +30,32 @@ ft_list_size:
 	jl _malloc_error
 
 	mov rcx, rax
-	mov rdi, rbx
+	mov qword [rcx], 10
+	mov qword [rcx + 8], rbx
 
-	mov qword [rcx], r12
-	mov qword [rcx + 8], rdi
-	mov rax, rcx
+	xor rax, rax
+	mov rdi, rbx
+	call ft_list_size
+	;* printf rax
+	mov rsi, rax
+	mov rdi, format
+	xor rax, rax
+	call printf wrt ..plt
+
+
+	mov rax, 60
+	xor rdi, rdi
+	syscall
+
+ft_list_size:
+	test rdi, rdi
+	jz return
+	inc rax
+	mov rdi, [rdi + 8]
+	jmp ft_list_size
+
+
+return:
 	ret
 
 _malloc_error:
