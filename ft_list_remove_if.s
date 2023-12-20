@@ -131,7 +131,7 @@ main:
 
 ; Function: ft_list_remove_if
 ; Arguments:
-;   RDI - ** to the head of the node
+;   RDI - * to the head of the node
 ;   RSI - value to be compared
 ;		RDX - function pointer for the function cmp
 ;		RCX - function pointer for the function free
@@ -213,6 +213,12 @@ cmp:
 ; Argument:
 ;   RDI - list_ptr
 free_fct:
+	;TODO: should check the position of the node to be deleted:
+
+	;* Check if the node to be deleted is the first node by
+	;* Checking the position - 16 if its null
+	mov
+
 	; Call the free function
 	; Note: The actual 'free' should be linked from a C library or implemented
 	call free wrt ..plt
