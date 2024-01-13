@@ -1,3 +1,6 @@
+section .data
+	error db "Hi, There's an error here!",10,0
+
 section .text
 	global ft_write
 	extern ft_strlen

@@ -1,3 +1,6 @@
+section .data
+	error db "Hi, There's an error here!",10,0
+
 section .text
 	global ft_strcmp
 	extern __errno_location ;? To get the errno pointer and set it

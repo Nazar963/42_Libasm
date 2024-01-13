@@ -35,9 +35,7 @@ _error_handle:
 	cmp rax, 0
 	jl _syscallError
 
-	mov rax, 60
-	xor rdi, rdi
-	syscall
+	xor rax, rax
 	ret
 
 _syscallError:
