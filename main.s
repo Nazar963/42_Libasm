@@ -28,8 +28,8 @@ section .data
 	ex2 db "a", 10, 0
 	ex3 db "blah blah blah blah", 10, 0
 	;? -------------------------------- ft_strdup ------------------------------- */
-	case1 db "Hello am the first string.",0
-	case2 db "11 hi am a 22 33 44 a string of 123321 numbers.",0
+	case1 db "Hello I'm the first string.",0
+	case2 db "11 hi affffffffffffffffffffm a 22 33 44ffffffffffffff a string of 123321 numbers.",0
 	;? --------------------------------- Divider -------------------------------- */
 	divi_strlen db 10,"ft_strlen>>>>>>>>>>>>>>",10,0
 	divi_strcpy db 10,"ft_strcpy>>>>>>>>>>>>>>",10,0
@@ -244,23 +244,28 @@ main:
 ;* -------------------------------------------------------------------------- */
 	mov rdi, case1
 	call ft_strdup
-	;* printf rax
-	mov rsi, rax
-	mov rdi, format_s
-	push rax
+	mov rdi, rax
 	call free wrt ..plt
-	xor rax, rax
-	call printf wrt ..plt
+	; ;* printf rax
+	; mov rsi, rax
+	; mov rdi, format_s
+	; mov rdi, rax
+	; call free wrt ..plt
+	; xor rax, rax
+	; call printf wrt ..plt
+	
 
 	mov rdi, case2
 	call ft_strdup
-	;* printf rax
-	mov rsi, rax
-	mov rdi, format_s
-	push rax
+	mov rdi, rax
 	call free wrt ..plt
-	xor rax, rax
-	call printf wrt ..plt
+	; ;* printf rax
+	; mov rsi, rax
+	; mov rdi, format_s
+	; xor rax, rax
+	; call printf wrt ..plt
+	; mov rdi, rsi
+	; call free wrt ..plt
 
 ;! --------------------------------- Divider -------------------------------- */
 	mov rsi, divi_read

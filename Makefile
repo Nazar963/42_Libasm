@@ -1,42 +1,35 @@
 CC = gcc -Wall -Wextra -Werror
 NC = nasm -f elf64
 CFILES = ft_read.s ft_strcmp.s ft_strcpy.s ft_strdup.s ft_strlen.s ft_write.s
+MAINS = main.s
+MAINO = main.o
+EX = run
 AR = ar -rcs
 NAME = libasm.a
 OFILES = $(CFILES:.s=.o)
 
-MAN = isalpha isdigit isalnum isascii isprint strlen memset bzero memcpy\
-		memmove strlcpy strlcat toupper tolower strchr strrchr strncmp memchr\
-		memcmp strnstr atoi calloc strdup substr strjoin strtrim split itoa\
-		strmapi striteri putchar_fd putstr_fd putendl_fd putnbr_fd
-MANFC = $(addprefix ft_,$(addsuffix .c, $(MAN)))
-MANO = $(MANFC:.c=.o)
+all: $(NAME)
 
-BON = lstnew lstadd_front lstsize lstlast lstadd_back lstdelone lstclear\
-		lstiter lstmap
-BONFC = $(addprefix ft_,$(addsuffix .c, $(BON)))
-BONO = $(BONFC:.c=.o)
+$(NAME): $(OFILES)
+	$(AR) $@ $^
 
-all: $(OFILES) $(NAME)
+%.o: %.s
+	@$(NC) $< -o $@
 
-$(OFILES): $(CFILES)
-	$(NC) $(CFILES)
+compile: $(MAINO) fin
 
-$(NAME): $(MANO)
-	$(AR) $(ARF) $@ $^
+$(MAINO): $(MAINS)
+	$(NC) $< -o $@
 
-%.o: %.c
-	@$(CC) -c $(CFLAGS) $(INC) $< -o $@
+fin: $(MAINO)
+	$(CC) $(MAINO) $(NAME) -o $(EX)
 
 clean:
-	@rm -f $(MANO) $(BONO)
+	@rm -f $(OFILES) $(MAINO)
 
 fclean: clean
-	@rm -f $(NAME)
+	@rm -f $(NAME) $(EX)
 
-re: fclean all
+re: fclean all compile
 
-bonus:	$(BONO)
-	$(AR) $(ARF) $(NAME) $^
-
-.PHONY: bonus all clean fclean re
+.PHONY: all compile fin clean fclean re

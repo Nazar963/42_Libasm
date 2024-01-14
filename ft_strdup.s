@@ -12,6 +12,14 @@ ft_strdup:
 	call ft_strlen
 	mov rcx, rax ;? Store the length of the string to be copied in rcx
 	inc rcx ;? So it holds the length of the string plus 1 for the null char
+	inc rcx ;? So it holds the length of the string plus 1 for the null char
+	inc rcx ;? So it holds the length of the string plus 1 for the null char
+	inc rcx ;? So it holds the length of the string plus 1 for the null char
+	inc rcx ;? So it holds the length of the string plus 1 for the null char
+	inc rcx ;? So it holds the length of the string plus 1 for the null char
+	inc rcx ;? So it holds the length of the string plus 1 for the null char
+	inc rcx ;? So it holds the length of the string plus 1 for the null char
+	inc rcx ;? So it holds the length of the string plus 1 for the null char
 	mov rbx, rdi ;? Save the string to be copied in rbx
 	xor rax, rax
 	xor rdi, rdi
