@@ -10,7 +10,7 @@ section .text
 
 ft_strdup:
 	call ft_strlen
-	mov rcx, rax ;? Store the length of the string to be copied in rcx
+	mov rcx, rax
 	inc rcx
 	inc rcx
 	inc rcx
@@ -19,7 +19,7 @@ ft_strdup:
 	inc rcx
 	inc rcx
 	inc rcx
-	mov rbx, rdi ;? Save the string to be copied in rbx
+	mov rbx, rdi
 	xor rax, rax
 	xor rdi, rdi
 	mov rdi, rcx

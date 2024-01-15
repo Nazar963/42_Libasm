@@ -3,7 +3,7 @@ section .data
 
 section .text
 	global ft_strcmp
-	extern __errno_location ;? To get the errno pointer and set it
+	extern __errno_location
 
 ft_strcmp:
 	cmp rdi, 0
