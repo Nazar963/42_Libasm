@@ -13,14 +13,16 @@ ft_strcpy:
 	xor rbx, rbx
 
 _ft_strcpy_loop:
-	mov rax, [rdi + rbx]
-	mov [rsi + rbx], rax
+	movzx rax, byte [rdi + rbx]
+	mov [rsi + rbx], al
+	test al, al
+	jz end
 	inc rbx
-	cmp byte [rdi + rbx], 0
-	jne _ft_strcpy_loop
-	inc rbx
+	jmp _ft_strcpy_loop
+
+end:
 	xor rax, rax
-	mov [rsi + rbx], rax
+	mov [rsi + rbx], al
 
 	mov rax, rsi
 	ret
