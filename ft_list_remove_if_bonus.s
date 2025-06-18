@@ -217,7 +217,8 @@ free_fct:
 
 	;* Check if the node to be deleted is the first node by
 	;* Checking the position - 16 if its null
-	mov
+	; The pointer to free is already in RDI (calling convention)
+	; mov rdi, rdi  ; Not needed, already in correct register
 
 	; Call the free function
 	; Note: The actual 'free' should be linked from a C library or implemented
