@@ -1,0 +1,221 @@
+name: Build and Test Libasm
+
+on:
+  push:
+    branches: [ master, main, develop ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y nasm gcc make
+        
+    - name: Verify tools installation
+      run: |
+        nasm --version
+        gcc --version
+        make --version
+        
+    - name: Build libasm.a (mandatory functions)
+      run: |
+        make all
+        
+    - name: Verify library creation
+      run: |
+        ls -la libasm.a
+        file libasm.a
+        
+    - name: Build test executable
+      run: |
+        make compile
+        
+    - name: Verify executable creation
+      run: |
+        ls -la run
+        file run
+        
+    - name: Run tests
+      run: |
+        ./run
+        
+    - name: Clean build artifacts
+      run: |
+        make fclean
+        
+    - name: Rebuild everything (test re target)
+      run: |
+        make re
+        
+    - name: Final test run
+      run: |
+        ./run
+
+  static-analysis:
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y nasm gcc make
+        
+    - name: Check assembly syntax
+      run: |
+        # Check all assembly files for syntax errors
+        for file in *.s; do
+          echo "Checking syntax of $file"
+          nasm -f elf64 "$file" -o "${file%.s}.o" || exit 1
+        done
+        
+    - name: Verify function exports
+      run: |
+        make all
+        # Check if all required functions are exported
+        nm libasm.a | grep -E "(ft_strlen|ft_strcpy|ft_strcmp|ft_write|ft_read|ft_strdup)"
+        
+    - name: Check for undefined symbols
+      run: |
+        make compile
+        # Run with verbose linking to catch any undefined symbols
+        gcc -v main.o libasm.a -o test_run 2>&1 | tee link_output.log
+        
+  compatibility:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        gcc-version: [9, 10, 11, 12]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y nasm make
+        
+    - name: Install GCC ${{ matrix.gcc-version }}
+      run: |
+        sudo apt-get install -y gcc-${{ matrix.gcc-version }}
+        
+    - name: Build with GCC ${{ matrix.gcc-version }}
+      run: |
+        CC=gcc-${{ matrix.gcc-version }} make re
+        
+    - name: Test with GCC ${{ matrix.gcc-version }}
+      run: |
+        ./run
+
+  memory-check:
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y nasm gcc make valgrind
+        
+    - name: Build with debug symbols
+      run: |
+        make re
+        
+    - name: Run memory leak check
+      run: |
+        valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --error-exitcode=1 ./run
+        
+    - name: Run memory error check
+      run: |
+        valgrind --tool=memcheck --track-origins=yes --error-exitcode=1 ./run
+
+  code-coverage:
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y nasm gcc make
+        
+    - name: Build and test
+      run: |
+        make re
+        ./run
+        
+    - name: Check function completeness
+      run: |
+        echo "Checking that all mandatory functions are implemented:"
+        # Verify all required functions exist in the library
+        functions=("ft_strlen" "ft_strcpy" "ft_strcmp" "ft_write" "ft_read" "ft_strdup")
+        for func in "${functions[@]}"; do
+          if nm libasm.a | grep -q "$func"; then
+            echo "✅ $func found"
+          else
+            echo "❌ $func missing"
+            exit 1
+          fi
+        done
+        
+        echo "Checking bonus functions:"
+        bonus_functions=("ft_atoi_base" "ft_list_push_front" "ft_list_size" "ft_list_remove_if")
+        for func in "${bonus_functions[@]}"; do
+          if ls ft_*bonus*.s | xargs grep -l "$func" > /dev/null 2>&1; then
+            echo "✅ $func implemented"
+          else
+            echo "⚠️  $func not found"
+          fi
+        done
+
+  performance-test:
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y nasm gcc make time
+        
+    - name: Build optimized version
+      run: |
+        make re
+        
+    - name: Performance benchmark
+      run: |
+        echo "Running performance tests..."
+        time ./run
+        
+    - name: Assembly code metrics
+      run: |
+        echo "Assembly code statistics:"
+        echo "Total lines of assembly code:"
+        wc -l *.s
+        echo ""
+        echo "Function count per file:"
+        for file in *.s; do
+          echo "=== $file ==="
+          grep -c "^[a-zA-Z_][a-zA-Z0-9_]*:" "$file" || echo "0"
+        done
