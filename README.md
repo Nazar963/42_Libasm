@@ -11,18 +11,18 @@ A low-level programming project implementing standard C library functions in x86
 **Project Status**: ✅ All mandatory and bonus functions implemented
 
 ## Table of Contents 📖
-- [Project Overview](#project-overview-)
-- [Implemented Functions](#implemented-functions-)
-- [Technical Details](#technical-details-)
-- [Installation](#installation-)
-- [Usage](#usage-)
-- [Testing](#testing-)
-- [Performance](#performance-)
-- [Learning Resources](#learning-resources-)
-- [Acknowledgments](#acknowledgments-)
-- [License](#license-)
+- [Project Overview](#project-overview)
+- [Implemented Functions](#implemented-functions)
+- [Technical Details](#technical-details)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Testing](#testing)
+- [Performance](#performance)
+- [Learning Resources](#learning-resources)
+- [Acknowledgments](#acknowledgments)
+- [License](#license)
 
-## Project Overview 📝
+## Project Overview
 
 Libasm is a 42 School project focused on writing assembly language implementations of standard C library functions. This project:
 - Introduces x86_64 assembly programming
@@ -40,7 +40,7 @@ Libasm is a 42 School project focused on writing assembly language implementatio
 
 **Current Status**: All mandatory functions and all bonus functions are implemented and working.
 
-## Implemented Functions 🛠️
+## Implemented Functions
 
 ### Mandatory Functions (100% Complete)
 | Function | Description | Prototype |
@@ -60,7 +60,7 @@ Libasm is a 42 School project focused on writing assembly language implementatio
 | `ft_list_size` | ✅ Implemented | Count elements in list |
 | `ft_list_remove_if` | ✅ Implemented | Conditional element removal |
 
-## Technical Details 🧠
+## Technical Details
 
 ### Assembly Syntax
 ```asm
@@ -104,7 +104,7 @@ _done:
    - Return -1 on error
    - Preserve registers across function calls
 
-## Installation ⚙️
+## Installation
 
 ### Requirements
 - NASM (Netwide Assembler)
@@ -115,8 +115,8 @@ _done:
 ### Compilation
 ```bash
 # Clone repository
-git clone https://github.com/Nazar963/libasm.git
-cd libasm
+git clone https://github.com/Nazar963/42_libasm.git
+cd 42_libasm
 
 # Build library
 make
@@ -138,7 +138,7 @@ fclean       # Remove objects, library, and executable
 re           # Rebuild everything (fclean + all + compile)
 ```
 
-## Usage 💻
+## Usage
 
 ### Include in Projects
 1. **Create a header file** (recommended):
@@ -193,7 +193,7 @@ make re
 ./run
 ```
 
-## Testing 🧪
+## Testing
 
 ### Test Framework
 The project includes a comprehensive test program in `main.s` that tests all implemented functions:
@@ -225,7 +225,7 @@ make re
 # The program will output test results for each function
 ```
 
-## Performance ⚡
+## Performance
 
 This implementation focuses on learning assembly language fundamentals rather than extreme optimization. The functions provide a direct translation of standard C library functions to assembly, demonstrating:
 
@@ -242,7 +242,7 @@ This implementation focuses on learning assembly language fundamentals rather th
 - Practicing register management
 - Implementing error handling in assembly
 
-## Learning Resources 📚
+## Learning Resources
 
 1. **Assembly References**:
    - [Intel x64 Manual](https://software.intel.com/en-us/articles/intel-sdm)
@@ -259,7 +259,7 @@ This implementation focuses on learning assembly language fundamentals rather th
    - [Branch Prediction](https://stackoverflow.com/questions/11227809/why-is-processing-a-sorted-array-faster-than-processing-an-unsorted-array)
    - [Memory Alignment](https://software.intel.com/en-us/articles/data-alignment-when-migrating-to-64-bit-intel-architecture)
 
-## Acknowledgments 🙏
+## Acknowledgments
 
 - **42 School** for the challenging project
 - **Intel** for processor documentation
@@ -267,21 +267,27 @@ This implementation focuses on learning assembly language fundamentals rather th
 - **Peer reviewers** at 42 Network
 - **Low-level programming community** for resources
 
-## License 📄
+## 🤝 Contributing
+Feel free to submit issues or pull requests if you have suggestions for improving the application or adding more features.
+
+## License
 
 This project is licensed under the MIT License - see [LICENSE](LICENSE) for details.
+
+## 📧 Contact
+For questions or feedback, please open an issue in the repository.
+
+## ⭐ Star this repository if you found it helpful!
+[![GitHub stars](https://img.shields.io/github/stars/Nazar963/42_libasm?style=social)](https://github.com/Nazar963/42_libasm/stargazers)
 
 ---
 
 🧠 *"The ultimate exercise in understanding how computers really work!"*  
-[![42 Profile](https://img.shields.io/badge/Profile-<your_42_login>-blue)](https://profile.intra.42.fr/users/<your_42_login>)  
+[![42 School](https://img.shields.io/badge/42-profile-blue)](https://profile-v3.intra.42.fr/users/naal-jen)
+[![GitHub Profile](https://img.shields.io/badge/GitHub-Nazar963-lightgrey)](https://github.com/Nazar963)
 [![GitHub Follow](https://img.shields.io/github/followers/Nazar963?style=social)](https://github.com/Nazar963)
 
-**Customization Guide**:
-1. Replace `Nazar963` with your GitHub handle
-2. Update `<your_42_login>` with your 42 intra ID
-3. Add actual screenshots of your assembly code
-4. Include your specific benchmark results
-5. Document which bonus functions you implemented
-6. Add any unique optimization techniques you used
-7. Include test case examples specific to your implementation
+---
+
+## 🍀 Goodluck:
+Good luck with your libasm project at 42! 🚀
