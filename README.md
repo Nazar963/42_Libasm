@@ -271,7 +271,6 @@ This implementation focuses on learning assembly language fundamentals rather th
 Feel free to submit issues or pull requests if you have suggestions for improving the application or adding more features.
 
 ## License
-
 This project is licensed under the MIT License - see [LICENSE](LICENSE) for details.
 
 ## 📧 Contact
